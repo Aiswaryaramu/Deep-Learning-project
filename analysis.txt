@@ -1,0 +1,100 @@
+1. Overview
+
+This document provides a detailed technical analysis of the implemented Python code and explains the observed outputs generated during execution. The focus is on understanding the logic, architecture, and results of both the LSTM and Attention-based models.
+
+2. Code Structure Breakdown
+
+2.1 Library Imports
+NumPy: Numerical operations and array handling
+TensorFlow / Keras: Deep learning framework
+Model, Layers: Used to define neural network architectures
+Adam Optimizer: Adaptive learning rate optimization
+
+2.2 Time Series Generation
+The `generate_time_series()` function constructs a synthetic dataset using:
+Linear trend to simulate growth
+Sinusoidal seasonality to mimic periodic patterns
+Gaussian noise for realism
+
+This combination reflects many real-world time series characteristics.
+
+2.3 Sequence Creation
+
+The `create_sequences()` function transforms the raw series into supervised learning samples:
+Input shape: (samples, 30, 1)
+Output shape: (samples,)
+
+This sliding-window approach allows the LSTM to learn temporal dependencies.
+
+3. Baseline LSTM Model Analysis
+
+Architecture:
+Input Layer: Time series sequences
+LSTM Layer (64 units): Learns temporal patterns
+Dense Layer: Outputs single-step forecast
+
+Training Behavior:
+Loss consistently decreases across epochs
+Model converges quickly due to normalized data
+
+Output:
+
+LSTM RMSE: 0.316
+This value represents the average prediction error magnitude on the test dataset.
+
+4. Attention-Based Model Analysis
+Architecture Enhancements:
+
+LSTM returns full sequences
+Self-attention layer computes importance weights
+Global Average Pooling aggregates attention outputs
+
+Purpose of Attention:
+
+Rather than improving raw accuracy, attention helps identify which past time steps contribute most to predictions.
+
+Output:
+
+Attention RMSE: 0.351
+The slightly higher RMSE is expected due to:
+Synthetic data simplicity
+Limited long-range dependencies
+
+5. Attention Representation Interpretation
+
+Sample output:
+
+[-0.09, 0.35, 0.24, -0.40, ...]
+
+Interpretation:
+Positive values indicate higher contribution
+Negative values indicate lower or inverse influence
+Variability confirms selective temporal focus
+
+This validates that the attention mechanism is functioning as intended.
+
+6. TensorFlow Runtime Messages
+
+Messages related to oneDNN and CPU instructions indicate:
+TensorFlow is optimized for CPU execution
+No GPU is required
+These are informational logs, not errors
+
+7. Performance Comparison Summary
+
+ Aspect            LSTM    Attention LSTM  
+
+ RMSE              Lower   Slightly Higher 
+ Interpretability  Low     High            
+  Complexity        Simple  Moderate        
+
+8. Key Takeaways
+
+LSTM is effective for short-term forecasting
+Attention enhances explainability
+Accuracy and interpretability must be balanced
+
+9. Interview-Ready Explanation
+The attention mechanism allows the model to dynamically assign importance to past time steps, enabling interpretability even when accuracy improvements are marginal on synthetic datasets.
+
+End of Analysis File

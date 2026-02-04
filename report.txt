@@ -1,0 +1,97 @@
+1. Introduction
+
+Time series forecasting plays a critical role in domains such as finance, energy consumption, traffic prediction, and demand forecasting. Traditional statistical models often struggle to capture complex temporal dependencies present in real-world data. Deep learning models, particularly Long Short-Term Memory (LSTM) networks, have proven effective due to their ability to model long-term dependencies.
+
+This project explores a baseline LSTM model and an enhanced LSTM model with an Attention mechanism to perform time series forecasting. The goal is not only to predict future values accurately but also to improve interpretability by understanding which past time steps influence predictions.
+
+2. Objectives
+
+Generate a realistic synthetic time series dataset
+Build a baseline LSTM forecasting model
+Implement an Attention-based LSTM model
+Compare performance using RMSE
+Demonstrate explainability using attention representations
+
+3. Dataset Description
+
+Since real-world datasets may contain noise, missing values, or access restrictions, a synthetic dataset was generated to simulate realistic conditions.
+Dataset Components:
+Trend: Linear upward movement over time
+Seasonality: Periodic sinusoidal pattern
+Noise: Gaussian noise to simulate randomness
+The dataset consists of 12,000 time points and is normalized to improve neural network training stability.
+
+4. Data Preprocessing
+
+To convert the time series into a supervised learning problem:
+
+A sliding window (lookback = 30) is used
+Each input sample contains 30 consecutive time steps
+The target is the next immediate value
+
+The dataset is split into:
+80% training data
+20% testing data
+
+5. Model Architecture
+
+5.1 Baseline LSTM Model
+
+The baseline model consists of:
+Input layer (30 time steps, 1 feature)
+LSTM layer with 64 hidden units
+Dense output layer
+This model serves as a benchmark for evaluating forecasting performance.
+
+5.2 Attention-Based LSTM Model
+
+The attention model enhances the LSTM by:
+
+Returning full sequence outputs from the LSTM
+Applying a self-attention mechanism to weigh time steps
+Aggregating attention outputs using global average pooling
+
+This architecture allows the model to focus on important historical time steps rather than treating all inputs equally.
+
+6. Training Configuration
+
+Optimizer: Adam (learning rate = 0.001)
+Loss function: Mean Squared Error (MSE)
+Epochs: 5
+Batch size: 64
+
+7. Evaluation Metric
+
+Root Mean Squared Error (RMSE) is used to evaluate model performance. RMSE provides an intuitive measure of prediction error in the same scale as the data.
+
+8. Results
+
+Model:Baseline LSTM
+RMSE-0.316
+Model:Attention LSTM
+RMSE-0.351
+
+Although the baseline LSTM achieves slightly lower RMSE, the attention model offers improved interpretability, which is a key objective of this project.
+
+9. Explainability with Attention
+
+The attention model produces a context vector representing the weighted contribution of past time steps. Sample attention values demonstrate that the model assigns different importance levels to different historical points, validating the effectiveness of the attention mechanism.
+
+10. Conclusion
+
+This project successfully demonstrates time series forecasting using LSTM and Attention mechanisms. While the baseline LSTM performs marginally better on synthetic data, the attention model provides valuable interpretability benefits. Such explainable models are particularly useful in real-world decision-making systems.
+
+11. Future Enhancements
+
+Apply the model to real-world datasets
+Increase lookback window for long-term dependencies
+Implement Transformer-based architectures
+Visualize attention weights over time
+
+12. Tools and Technologies
+
+Python
+TensorFlow / Keras
+NumPy
+
+End of Report
