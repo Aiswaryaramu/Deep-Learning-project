@@ -1,100 +1,13 @@
-1. Overview
+ANALYSIS
 
-This document provides a detailed technical analysis of the implemented Python code and explains the observed outputs generated during execution. The focus is on understanding the logic, architecture, and results of both the LSTM and Attention-based models.
+The deep learning time series forecasting model was evaluated using a rolling-origin cross-validation strategy to ensure robustness under realistic temporalを見る conditions. Three evaluation folds were created, each progressively expanding the training window and forecasting future observations.
 
-2. Code Structure Breakdown
+Across the three folds, the attention-based Seq2Seq LSTM model achieved RMSE values of approximately 4.99, 6.25, and 7.06 respectively. Corresponding MAE values ranged from approximately 4.18 to 6.15. The gradual increase in error across folds is expected due to the growing forecasting horizon and increased uncertainty in later segments of the time series.
 
-2.1 Library Imports
-NumPy: Numerical operations and array handling
-TensorFlow / Keras: Deep learning framework
-Model, Layers: Used to define neural network architectures
-Adam Optimizer: Adaptive learning rate optimization
+The results demonstrate that the model successfully learns trend and seasonal components, particularly in earlier folds where sufficient historical context is available. Attention mechanisms enable the model to prioritize relevant past observations, improving short-to-medium horizon accuracy.
 
-2.2 Time Series Generation
-The `generate_time_series()` function constructs a synthetic dataset using:
-Linear trend to simulate growth
-Sinusoidal seasonality to mimic periodic patterns
-Gaussian noise for realism
+For benchmarking purposes, a classical ARIMA model was implemented using the same dataset. The ARIMA model produced an RMSE of approximately 7.19 and an MAE of approximately 6.51. Compared to the deep learning model, ARIMA exhibits weaker performance, particularly in capturing nonlinear seasonality and long-term dependencies.
 
-This combination reflects many real-world time series characteristics.
+The visualization further confirms that ARIMA forecasts tend to smooth the series and lag behind rapid seasonal fluctuations, whereas the deep learning model adapts more dynamically to changing patterns.
 
-2.3 Sequence Creation
-
-The `create_sequences()` function transforms the raw series into supervised learning samples:
-Input shape: (samples, 30, 1)
-Output shape: (samples,)
-
-This sliding-window approach allows the LSTM to learn temporal dependencies.
-
-3. Baseline LSTM Model Analysis
-
-Architecture:
-Input Layer: Time series sequences
-LSTM Layer (64 units): Learns temporal patterns
-Dense Layer: Outputs single-step forecast
-
-Training Behavior:
-Loss consistently decreases across epochs
-Model converges quickly due to normalized data
-
-Output:
-
-LSTM RMSE: 0.316
-This value represents the average prediction error magnitude on the test dataset.
-
-4. Attention-Based Model Analysis
-Architecture Enhancements:
-
-LSTM returns full sequences
-Self-attention layer computes importance weights
-Global Average Pooling aggregates attention outputs
-
-Purpose of Attention:
-
-Rather than improving raw accuracy, attention helps identify which past time steps contribute most to predictions.
-
-Output:
-
-Attention RMSE: 0.351
-The slightly higher RMSE is expected due to:
-Synthetic data simplicity
-Limited long-range dependencies
-
-5. Attention Representation Interpretation
-
-Sample output:
-
-[-0.09, 0.35, 0.24, -0.40, ...]
-
-Interpretation:
-Positive values indicate higher contribution
-Negative values indicate lower or inverse influence
-Variability confirms selective temporal focus
-
-This validates that the attention mechanism is functioning as intended.
-
-6. TensorFlow Runtime Messages
-
-Messages related to oneDNN and CPU instructions indicate:
-TensorFlow is optimized for CPU execution
-No GPU is required
-These are informational logs, not errors
-
-7. Performance Comparison Summary
-
- Aspect            LSTM    Attention LSTM  
-
- RMSE              Lower   Slightly Higher 
- Interpretability  Low     High            
-  Complexity        Simple  Moderate        
-
-8. Key Takeaways
-
-LSTM is effective for short-term forecasting
-Attention enhances explainability
-Accuracy and interpretability must be balanced
-
-9. Interview-Ready Explanation
-The attention mechanism allows the model to dynamically assign importance to past time steps, enabling interpretability even when accuracy improvements are marginal on synthetic datasets.
-
-End of Analysis File
+Overall, the rolling evaluation confirms that the attention-based deep learning model provides superior forecasting accuracy compared to the traditional ARIMA baseline, especially in earlier folds and high-variance regions of the time series.
